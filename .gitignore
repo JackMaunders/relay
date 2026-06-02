@@ -1,4 +1,4 @@
 node_modules/
 dist/
-relay.dbcommit this
+relay.db
 *.db-journal
