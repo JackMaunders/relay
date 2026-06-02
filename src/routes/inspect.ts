@@ -17,7 +17,7 @@ const inspectRoutes: FastifyPluginAsyncZod = async (fastify) => {
             .max(50)
             .regex(/^[a-z0-9-]+$/)
             .optional(),
-          status: z.enum(['success', 'pending', 'replayed', 'failed']).optional(),
+          status: z.enum(['delivered', 'pending', 'replayed', 'failed']).optional(),
           limit: z.coerce.number().int().min(1).max(100).default(20),
         }),
       },
@@ -60,7 +60,8 @@ const inspectRoutes: FastifyPluginAsyncZod = async (fastify) => {
       const event = await fastify.drizzle
         .select()
         .from(webhookEvents)
-        .where(eq(webhookEvents.id, id));
+        .where(eq(webhookEvents.id, id))
+        .get();
 
       if (!event) {
         return reply.code(404).send({ message: 'Webhook event not found' });

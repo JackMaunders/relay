@@ -8,7 +8,7 @@ export const webhookEvents = sqliteTable('webhook_events', {
   body: text('body'),
   receivedAt: text('received_at').notNull(),
   status: text('status', {
-    enum: ['success', 'pending', 'replayed', 'failed'],
+    enum: ['delivered', 'pending', 'replayed', 'failed'],
   })
     .notNull()
     .default('pending'),
