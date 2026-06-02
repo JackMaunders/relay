@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 import fastifyDrizzle from './db/plugin.js'
 import ingestRoutes from './routes/ingest.js'
+import inspectRoutes from './routes/inspect.js'
 
 const fastify = Fastify({
   logger: true
@@ -11,7 +12,9 @@ fastify.setValidatorCompiler(validatorCompiler)
 fastify.setSerializerCompiler(serializerCompiler)
 
 fastify.register(fastifyDrizzle, { filename: 'relay.db' })
-fastify.register(ingestRoutes)
+
+fastify.register(ingestRoutes, { prefix: '/webhooks' })
+fastify.register(inspectRoutes, { prefix: '/webhooks' })
 
 const start = async () => {
   try {
