@@ -1,0 +1,33 @@
+{
+  "name": "relay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "keywords": [],
+  "author": "Jack Maunders",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "better-sqlite3": "^12.10.0",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.8.5",
+    "fastify-plugin": "^5.1.0",
+    "fastify-type-provider-zod": "^6.1.0",
+    "nanoid": "^5.1.11",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.9.1",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
