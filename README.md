@@ -123,16 +123,6 @@ If `targetUrl` is omitted, `RELAY_TARGET_URL` from your `.env` is used. Returns 
 | `failed`    | Forwarding failed on most recent attempt         |
 | `replayed`  | Successfully forwarded via manual replay         |
 
-## Scripts
-
-| Script                | Description                            |
-| --------------------- | -------------------------------------- |
-| `npm run dev`         | Start server with hot reload           |
-| `npm run build`       | Compile TypeScript to `dist/`          |
-| `npm run start`       | Run compiled server                    |
-| `npm run db:generate` | Generate migration from schema changes |
-| `npm run db:migrate`  | Apply pending migrations               |
-
-The `drizzle/migrations/` folder should be committed — it is your schema history.
+**Note**: The `drizzle/migrations/` folder should be committed — it is your schema history.
 
 > Useful issue on conditional query building in drizzle: https://github.com/drizzle-team/drizzle-orm/issues/1644
