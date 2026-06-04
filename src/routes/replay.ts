@@ -15,15 +15,17 @@ const replayRoutes: FastifyPluginAsyncZod = async (fastify) => {
           id: z.nanoid(),
         }),
         body: z.object({
-          targetUrl: z.url().optional()
-        })
+          targetUrl: z.url().optional(),
+        }),
       },
     },
     async (request, reply) => {
-      const targetUrl = request.body.targetUrl ?? process.env.REPLAY_TARGET_URL
+      const targetUrl = request.body.targetUrl ?? process.env.REPLAY_TARGET_URL;
 
       if (!targetUrl) {
-        return reply.code(400).send({ message: 'No target URL provided and REPLAY_TARGET_URL is not set' })
+        return reply
+          .code(400)
+          .send({ message: 'No target URL provided and REPLAY_TARGET_URL is not set' });
       }
 
       const { id } = request.params;
@@ -38,7 +40,7 @@ const replayRoutes: FastifyPluginAsyncZod = async (fastify) => {
         return reply.code(404).send({ message: 'Webhook event not found' });
       }
 
-      const result = await replayEvent(event, targetUrl)
+      const result = await replayEvent(event, targetUrl);
 
       await fastify.drizzle
         .update(webhookEvents)
@@ -46,11 +48,11 @@ const replayRoutes: FastifyPluginAsyncZod = async (fastify) => {
           status: result.success ? 'replayed' : 'failed',
           replayCount: event.replayCount + 1,
           lastReplayedAt: new Date().toISOString(),
-          lastReplayTarget: targetUrl
+          lastReplayTarget: targetUrl,
         })
-        .where(eq(webhookEvents.id, event.id))
+        .where(eq(webhookEvents.id, event.id));
 
-      return reply.send(result)
+      return reply.send(result);
     }
   );
 };
