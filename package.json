@@ -7,10 +7,11 @@
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc",
     "start": "node --env-file=.env dist/server.js",
+    "test": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "format": "prettier --write src/**/*.ts",
-    "format:check": "prettier --check src/**/*.ts"
+    "format": "prettier --write src/**/*.ts tests/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts tests/**/*.ts"
   },
   "keywords": [],
   "author": "Jack Maunders",
@@ -31,6 +32,8 @@
     "drizzle-kit": "^0.31.10",
     "prettier": "^3.8.3",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "undici": "^8.3.0",
+    "vitest": "^4.1.8"
   }
 }
