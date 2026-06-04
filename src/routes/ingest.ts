@@ -31,22 +31,33 @@ const ingestRoutes: FastifyPluginAsyncZod = async (fastify) => {
         receivedAt: new Date().toISOString(),
       };
 
-      await fastify.drizzle.insert(webhookEvents).values(webhookEvent);
+      try {
+        await fastify.drizzle.insert(webhookEvents).values(webhookEvent);
+      } catch (err) {
+        fastify.log.error(err);
+        return reply.code(500).send({ message: 'Failed to store webhook event' });
+      }
 
-      // Tempted to swap this and type out webhookEvent fully to avoid an extra db read
-      const stored = fastify.drizzle
-        .select()
-        .from(webhookEvents)
-        .where(eq(webhookEvents.id, webhookEvent.id))
-        .get();
+      if (process.env.REPLAY_TARGET_URL) {
+        try {
+          // Tempted to swap this and type out webhookEvent fully to avoid an extra db read
+          const stored = fastify.drizzle
+            .select()
+            .from(webhookEvents)
+            .where(eq(webhookEvents.id, webhookEvent.id))
+            .get();
 
-      if (process.env.REPLAY_TARGET_URL && stored) {
-        const result = await replayEvent(stored, process.env.REPLAY_TARGET_URL);
+          if (stored) {
+            const result = await replayEvent(stored, process.env.REPLAY_TARGET_URL);
 
-        await fastify.drizzle
-          .update(webhookEvents)
-          .set({ status: result.success ? 'delivered' : 'failed' })
-          .where(eq(webhookEvents.id, webhookEvent.id));
+            await fastify.drizzle
+              .update(webhookEvents)
+              .set({ status: result.success ? 'delivered' : 'failed' })
+              .where(eq(webhookEvents.id, webhookEvent.id));
+          }
+        } catch (err) {
+          fastify.log.error({ err, id: webhookEvent.id }, 'Failed to replay webhook event');
+        }
       }
 
       return reply.code(201).send({ id: webhookEvent.id });
